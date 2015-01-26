@@ -1,0 +1,18 @@
+%DISCUSSION
+
+\section[Discussion]{Discussion} % Section
+
+\begin{frame}
+    \frametitle{Discussion} % Slide title
+	\textbf{Advantages}
+	\begin{itemize}
+		\item Better results with linear classifiers: Kernel PCA extends PCA by extracting non-linear principal components allowing better performances for linear classifications
+		\item Those components are computed by only solving the eigenvalue problem, which is done in a low complexity due to the Kernel methods
+	\end{itemize}
+
+	\textbf{Suggested improvements}
+	\begin{itemize}
+		\item Adapt Kernel PCA to current PCA methods suitable for huge datasets
+		\item Scaling factor applied to $\bar{C}$ is \textit{l}, should be $l-1$ to remove the bias (Bessel's correction)
+	\end{itemize}
+\end{frame}

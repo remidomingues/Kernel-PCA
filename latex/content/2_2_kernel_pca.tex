@@ -1,0 +1,98 @@
+\subsection{Kernel Principal Component Analysis}
+
+\subsubsection{Derivation}
+We define the high-dimension feature space \textit{F}, containing the image of our data obtained after a non-linear mapping $\Phi$ from the input space
+
+\begin{equation} \label{eq:space_definition}
+\Phi : \mathbb{R}^N \rightarrow F, \textbf{x} \rightarrow \textbf{X}
+\end{equation}
+
+We first assume that our data in \textit{F} is centered, $\sum\limits_{k=1}^l \Phi(\textbf{x}_k) = 0$ , i.e. the mean is 0.
+
+As done in the standard PCA, the Kernel PCA algorithm constructs the covariance matrix of the data, but now we define it in the feature space $F$.
+
+\begin{equation} \label{eq:cov_matrix}
+\bar{C} = \frac{1}{l} \sum\limits_{j=1}^{l} \Phi(\textbf{x}_j) \Phi(\textbf{x}_j)^T
+\end{equation}
+
+% I don't understand why we have this part
+%\textbf{Projecting into higher dimensional space}\newline
+%Projecting the higher dimensional $\Phi(x)$ into a different space, as it was done in the normal PCA case in low dimensional space (section \ref{sec:pca}), will lead to a new representation of the input in high dimensional space. In PCA the Eigenvectors would be computed and used to get a "diagonal covariance matrix" \cite{pcaTutorial}. \newline
+%In this case we cannot calculate the Eigenvectors since the $\Phi(x)$ can map into infinite dimensional space.The high dimensional eigenvectors  cannot be computed since they might be infinite dimensional. m $\Phi(x)$
+
+We now need to find the eigenvalues $\lambda\geq 0$ and eigenvectors $\textbf{V}\in F \backslash\{ 0\}$ of the covariance matrix $\bar{C}$. That is, which satisfies $\lambda\textbf{V}=\bar{C}\textbf{V}$.
+The high dimensional eigenvectors  cannot be computed since they might be infinite dimensional. But since all solutions $\textbf{V}$ lie in $\text{span}\{ \Phi(\textbf{x}_1),\dots,\Phi(\textbf{x}_l)\} $  we can consider the equivalent system in \eqref{eq:eq_system}, in which a data point $\Phi(\textbf{x}_k)$ is projected onto the eigenvectors, and write the eigenvectors as in \eqref{eq:alpha_coeff_def}, where the data points are used as a basis.
+
+
+\begin{equation} \label{eq:eq_system}
+\lambda (\Phi(\textbf{x}_k) \cdot \textbf{V}) = (\Phi(\textbf{x}_k)) \cdot \bar{C} \textbf{V})\text{ for }k = 1,...,l
+\end{equation}
+
+
+\begin{equation} \label{eq:alpha_coeff_def}
+\textbf{V} = \sum\limits_{i=1}^{l} \alpha_i \Phi(\textbf{x}_i)
+\end{equation}
+
+
+Let us now define a matrix $\textbf{K}\in \mathbb{R}^{l\times l}$ that consists of inner products in the feature space $F$ of the vectors $\Phi(\textbf{x}_1),\dots,\Phi(\textbf{x}_l)$.
+
+\begin{equation} \label{eq:k_matrix}
+K_{ij} := (\Phi(\textbf{x}_i) \cdot \Phi(\textbf{x}_j))
+\end{equation}
+
+We now substitute \eqref{eq:cov_matrix} and \eqref{eq:alpha_coeff_def} into \eqref{eq:eq_system},
+
+\begin{equation*}
+\lambda (\Phi(\textbf{x}_k) \cdot \sum\limits_{i=1}^{l} \alpha_i \Phi(\textbf{x}_i)) = (\Phi(\textbf{x}_k) \cdot \frac{1}{l} \sum\limits_{j=1}^{l} \Phi(\textbf{x}_j) \Phi(\textbf{x}_j)^T \sum\limits_{i=1}^{l} \alpha_i \Phi(\textbf{x}_i))\text{ for }k = 1,...,l
+\end{equation*}
+
+Rearranging this gives
+
+\begin{equation*}
+ l \lambda \sum\limits_{i=1}^{l} \Phi(\textbf{x}_k)^T \Phi(\textbf{x}_i) \alpha_i = \sum\limits_{j=1}^{l} \Phi(\textbf{x}_k)^T \Phi(\textbf{x}_j) \sum\limits_{i=1}^{l} \Phi(\textbf{x}_j)^T \Phi(\textbf{x}_i) \alpha_i\text{ for }k = 1,...,l
+\end{equation*}
+
+%\begin{equation*}
+% l \lambda \sum\limits_{k,i=1}^{l} \Phi(\textbf{x}_k) \cdot \Phi(\textbf{x}_i) \alpha_i = \sum\limits_{j=1}^{l} \Phi(\textbf{x}_j) \Phi(\textbf{x}_j)^T \sum\limits_{k,i=1}^{l} \Phi(\textbf{x}_k) \cdot \Phi(\textbf{x}_i) \alpha_i
+%\end{equation*}
+
+which can be written as follows with \textbf{K} defined above and $\boldsymbol{\alpha}$ is a column vector with entries $\alpha_1,\dots,\alpha_l$,
+
+\begin{equation} \label{eq:problem}
+l \lambda \textbf{K} \boldsymbol{\alpha} = \textbf{K}^2 \boldsymbol{\alpha}
+\end{equation}
+
+To find the solutions to \eqref{eq:problem} we solve the eigenvalue problem in \eqref{eq:solution} since all solutions to this problem are also solutions to \eqref{eq:problem}. Because it can be shown that any additional  solutions do not make a difference.
+
+\begin{equation} \label{eq:solution}
+l \lambda \boldsymbol{\alpha} = \textbf{K} \boldsymbol{\alpha}
+\end{equation}
+
+The next step is to normalize the solutions $\boldsymbol{\alpha}^k$ corresponding to all eigenvalues, $\lambda > 0$. This is done by requiring that $(\textbf{V}^k\cdot \textbf{V}^k)=1$, that is normalizing the eigenvectors in the feature space.
+
+\begin{equation} \label{eq:alpha_coeff}
+1 = (\textbf{V}^k \cdot \textbf{V}^k) = \sum\limits_{i,j=1}^{l} \alpha_i^k \alpha_j^k (\Phi(\textbf{x}_i) \cdot \Phi(\textbf{x}_j)) =  (\boldsymbol{\alpha}^k \cdot \textbf{K} \boldsymbol{\alpha}^k) =  \lambda_k (\boldsymbol{\alpha}^k \cdot \boldsymbol{\alpha}^k)
+\end{equation}
+
+The principal components can be extracted by projecting a test data point $\Phi(\textbf{x})$ onto the eigenvectors $\textbf{V}^k$, according to equation \eqref{eq:components_extraction}.
+
+\begin{equation} \label{eq:components_extraction}
+(\textbf{V}^k \cdot \Phi(\textbf{x})) =  \sum\limits_{i=1}^{l} \alpha_i^k (\Phi(\textbf{x}_i) \cdot \Phi(\textbf{x}))
+\end{equation}
+
+It can be observed from the previous derivation that the only operation applied to our data points in the feature space is a dot product in equations \eqref{eq:k_matrix} and
+\eqref{eq:components_extraction}. This is precisely the low complexity operation provided by the kernel functions, which means that we do not need the mapping $\Phi$ explicitly. And in the above we can substitute all inner products in $F$ with a kernel function. This will allow us to perform our calculations even if $F$ is of infinite dimension.
+
+
+\subsubsection{Generalization}
+In order to simplify the derivation above, it has been previously assumed that the data has a mean of 0 in both input and feature space. However, we cannot generally center the data in the feature space, so the Kernel PCA algorithm should replace the use of the mapping $\Phi$ by
+
+\begin{equation} \label{eq:phi_correction}
+\tilde{\Phi}(\textbf{x}_i) := \Phi(\textbf{x}_i) - \frac{1}{l} \sum\limits_{j=1}^l \Phi(\textbf{x}_j)
+\end{equation}
+
+Then we express the new matrix which we must diagonalize in terms of \textbf{K}
+
+\begin{equation} \label{eq:phi_correction}
+\tilde{\textbf{K}}_{ij} = \textbf{K} - 1_l\textbf{K} - \textbf{K}1_l + 1_l\textbf{K}1_l\text{ with }(1_l)_{ij} := \frac{1}{l}
+\end{equation}

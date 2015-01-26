@@ -1,0 +1,49 @@
+\subsection{Concepts}
+\subsubsection{Kernel} \label{sec:kernel}
+The kernels mentioned in this report refer to functions used to represent an inner product in a high-dimensional feature space which arise from a non-linear transformation from an input space. That means a kernel function $k$ is,
+
+\begin{equation}
+k(\textbf{x},\textbf{x'}) = (\Phi(\textbf{x})\cdot\Phi(\textbf{x'}))
+\end{equation}
+
+where $\Phi: \mathbb{R}^N\rightarrow F$ is a non-linear mapping from an input space $\mathbb{R}^N$ to a feature space $F$. $\textbf{x},\textbf{x'}\in \mathbb{R}^N$, and $(\bullet\cdot\bullet)$ denotes the inner product in $F$. 
+
+The main interest of kernel functions resides in their computation cost, since they provide an inner product between each pair of points in the high dimension space for a lower complexity than the effective computation of the coordinates of the input points in the high dimension space followed by their pairwise inner product\cite{boser1992training}.
+
+The efficiency of kernels when applied to Support Vector Machines has been demonstrated\cite{scholkopf1996incorporating}. In the experiments, we will work with a polynomial kernel.
+\begin{align}
+\text{Polynomial of degree \textit{d}: }& k(x,y) = (x \cdot y)^d
+\end{align}
+
+
+% I think this whole section is basic knowledge and unnescessary. -Agnes
+%\subsubsection{Eigenvalues and eigenvectors\label{sec:eigen_concept}}
+
+%The eigenvalues \textit{$\lambda$} of a square matrix \textit{A} are obtained by finding the roots of the polynom obtained with the following formula:
+
+%\begin{equation}
+%|A - \lambda I| = 0
+%\end{equation}
+
+%The eigen vectors $v \neq {0}$ are then found by resolving the following equation for each eigenvalue:
+
+%\begin{equation} \label{eq:eigenvectors_constraint}
+%A v = \lambda v \Leftrightarrow (A - \lambda I) v = 0
+%\end{equation}
+
+
+\subsubsection{Principal Component Analysis (PCA)}
+\label{sec:pca}
+The following section is based on \cite{pcaTutorial}. \newline
+PCA is a tool used to reduce the dimensionality of a dataset. When dealing with many input dimensions, the relevant data might be extracted using less dimensions, therefore we find a basis of orthogonal vectors in the input space, from which we know each vectors' contribution for the representing the data.  \newline
+In order to find a lower dimensional representation of the data it requires to build the covariance matrix of the given dataset. Following, we extract the principal components by calculating the $N$ eigenvectors corresponding the highest eigenvalues. The $N$ is given by the user or deduced from Maximum Likelihood Estimation (MLE)\cite{minka2000automatic}. In further detail, the eigenvectors with the highest eigenvalues are chosen, because those are the eigenvectors explain the highest amount of variance in the data. \newline
+
+The idea behind PCA is to "diagonalize the covariance matrix", in detail: we try to map our data into a new representation denoted by:
+
+\begin{equation} \label{eq:pca_projection}
+\textbf{Y} = \textbf{PX}
+\end{equation}
+
+Where $ \textbf{X} $ is our data and $ \textbf{Y} $ is our new representation. The matrix $\textbf{P}$ is the orthonormal projection matrix, transforming \textbf{X} into the representation $ \textbf{Y} $. The target of the PCA is to transform the data into a representation $ \textbf{Y} $ in which covariance matrix is a diagonal matrix. Thereby diagonalizing the covariance matrix. When we choose $ \textbf{P} $ to be a matrix where each row is an eigenvector of $ \textbf{X} $, the covariance matrix of $ \textbf{Y} $ becomes diagonal and the matrix $ \textbf{P }$ represents our principal components, for more details see \cite{pcaTutorial}.\newline
+
+%By reducing its dimensionality and therefore reducing the impact of curse dimensionality, the data represented in this space is then a better input for knowledge extraction methods than the one in high-dimensional space\cite{tipping1999probabilistic}.
